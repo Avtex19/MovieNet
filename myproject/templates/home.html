@@ -1,0 +1,133 @@
+{% extends 'index.html' %} {% block content %}
+<div class="header-bar">
+  <ul>
+    {% if request.user.is_authenticated %}
+    <li>
+      <a href="{% url 'favorites'%}">Favorite Movies</a>
+    </li>
+    <li>
+      <a>Hello {{ request.user|title }}</a>
+    </li>
+  </ul>
+  <ul>
+    <li>
+      <a href="{% url 'logout' %}">Logout</a>
+    </li>
+    <li>
+      <form class="" method="POST">
+        {% csrf_token %}
+        <div class="" style="font-size: 20px;
+        color: white;
+        display: block;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        float: right;
+        ">
+          <input
+            class="input"
+            type="text"
+            placeholder="Movie Name"
+            name="name"
+            id="search-input"
+          />
+          <button type="submit" name="submit-name" class="search-btn">
+            &#x1F50E;
+          </button>
+        </div>
+      </form>
+      
+    </li>
+    {% else %}
+    <li>
+      <a href="{% url 'login' %}">Login</a>
+    </li>
+    {% endif %}
+  </ul>
+</div>
+
+
+<div class="columns">
+  {% for movie in movie_info %}
+  <div class="box">
+    <div class="content">
+      <div class="movie-details">
+        {% for key, value in movie.items %}
+        <div class="movie-detail">
+          <span class="movie-key">{{ key }}:</span>
+          <span class="movie-value">{{ value }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      <button type="button" class="add-favorite" data-movie="{{ movie.name }}">
+        &#10084;
+      </button>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+<script>
+  // Get the add-favorite buttons
+  const addFavoriteButtons = document.querySelectorAll(".add-favorite");
+
+  // Add click event listener to each button
+  addFavoriteButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      // Prevent the default form submission behavior
+      event.preventDefault();
+      
+      // Get the movie name from the data attribute
+      const movieName = button.getAttribute("data-movie");
+
+      // Create a new input element and set its value
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "movieName";
+      input.value = movieName;
+
+      // Append the input element to the form
+      const form = document.querySelector("form");
+      form.appendChild(input);
+
+      // Send an AJAX request to add the movie to favorites
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "{% url 'home' %}", true);
+      xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          const response = JSON.parse(xhr.responseText);
+          if (response.message) {
+            // Display the success message
+            showMessage(response.message, "success");
+          }
+        } else {
+          // Display an error message
+          showMessage("An error occurred while adding the movie to favorites.", "error");
+        }
+      };
+      xhr.send("movieName=" + encodeURIComponent(movieName));
+    });
+  });
+
+  // Function to display a message on the page
+  function showMessage(message, type) {
+    const messageContainer = document.createElement("div");
+    messageContainer.className = "message " + type;
+    messageContainer.textContent = message;
+
+    // Append the message container to the page
+    const body = document.querySelector("body");
+    body.appendChild(messageContainer);
+
+    // Remove the message after 3 seconds
+    setTimeout(function () {
+      body.removeChild(messageContainer);
+    }, 3000);
+  }
+</script>
+
+
+{% endblock content %}

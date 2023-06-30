@@ -1,0 +1,12 @@
+{% extends 'index.html' %} {% block content%}
+<div class="header-bar">
+<h1>Favorite Movies</h1>
+<a href="{% url 'home' %}">Home</a>
+</div>
+ <div class="fav-movies">
+{% for movie in favorite_movies %}
+<p>{{ movie.name }}</p>
+{% empty %}
+<p>No favorite movies</p>
+</div>
+{% endfor %} {% endblock content%}

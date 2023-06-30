@@ -1,0 +1,65 @@
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  height: 60px; /* Adjust the height as desired */
+}
+
+.header-bar h1 {
+  margin: 0;
+  padding: 10px;
+}
+
+.header-bar a{
+  font-size: 20px;
+  color: white;
+  display: block;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  float: right;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: right;
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+  background-color: #111;
+}
+
+.fav-movies {
+  display: flex;
+  justify-content: space-around;
+}
+
+.movie-details {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.movie-detail {
+  flex-basis: 50%; /* Adjust as desired to control the number of columns */
+}
+
+.movie-key {
+  font-weight: bold;
+}
+
+.movie-value {
+  margin-left: 5px;
+}
+
